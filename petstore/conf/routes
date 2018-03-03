@@ -18,6 +18,9 @@ POST  /insertar  controllers.HomeController.insertarMascota
 PUT  /actualizar  controllers.HomeController.actualizarMascota
 DELETE  /eliminar/:id  controllers.HomeController.removerMascota(id: Int)
 
+#propuesto
+GET  /mascotaid/:id  controllers.HomeController.getMascotasIdSQL(id: Int)
+
 # Rutas propias del aplicativo PetStore para la version con MySQL
 GET  /mascotasSQL  controllers.HomeController.getMascotasSQL
 POST  /insertarSQL  controllers.HomeController.insertarMascotaSQL

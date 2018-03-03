@@ -86,6 +86,40 @@ class HomeController @Inject()(db: Database, cc: ControllerComponents)
     Ok(jsonAux) // Y se retorna la lista de mascotas Jsificada
   }
 
+def getMascotasIdSQL(id: Int) = Action {
+    // En primer lugar creamos una variable para realizar la conexion con la BD
+    val conexion = db.getConnection()
+
+    // A continuación inicializamos (vaciamos) la lista con la que procesaremos los datos que lleguen de la BD
+    mascotas = List[Pet]()
+
+    try {
+      // Ahora creamos una variable en donde formulamos nuestra query SQL de búsqueda y la ejecutamos
+      val query = conexion.createStatement
+      val resultado = query.executeQuery("SELECT * FROM pet WHERE id =" + id)
+
+      // Ya con el resultado de la consulta, creamos objetos mascota y los agregamos a la lista de apoyo
+      while (resultado.next()) {
+        var p = Pet(
+          resultado.getInt("id"),
+          resultado.getString("name"),
+          resultado.getString("kind"),
+          resultado.getString("gender"),
+          resultado.getString("location"),
+          resultado.getString("state")
+        )
+        mascotas = mascotas :+ p
+      }
+    } finally {
+      // Antes de retornar los resultados, cerramos la conexión a la BD
+      conexion.close()
+    }
+
+    val jsonAux = Json.toJson(mascotas) // Finalmente, se Jsifican los resultados
+    Ok(jsonAux) // Y se retorna la lista de mascotas Jsificada
+  }
+
+
 // Método para eliminar la mascota indicada de la BD
   def removerMascotaSQL(id: Int) = Action {
     // En primer lugar creamos una variable para realizar la conexión con la BD
